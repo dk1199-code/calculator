@@ -1,0 +1,82 @@
+
+@{
+    ViewBag.Title = "Calculator";
+}
+<div id="calcFrame" class="marginalign">
+    <form id="Calculator">
+        <div class="marginalign1">
+            <div id="calcScreenDiv"><input id="calcScreen" name="display" class="textarea" placeholder="0"></div>
+            <table id="buttonsDiv" class="malign" >
+                <tr>
+                    <td colspan="2"><button type="button" class="form-control" onclick="display.value += '+'" style="height:40px;width:150px">+</button></td>
+                    <td><button type="button" class="form-control" onclick="display.value += '/'" style="height:40px;width:75px">/</button></td>
+                    <td><button type="button" class="form-control" onclick="display.value += '0'" style="height:40px;width:75px">0</button></td>
+                </tr>
+                <tr>
+                    <td><button type="button" class="form-control" onclick="display.value += '7'" style="height:40px;width:75px">7</button></td>
+                    <td><button type="button" class="form-control" onclick="display.value += '8'" style="height:40px;width:75px">8</button></td>
+                    <td><button type="button" class="form-control" onclick="display.value += '9'" style="height:40px;width:75px">9</button></td>
+                    <td><button type="button" class="form-control" onclick="display.value += '*'" style="height:40px;width:75px">*</button></td>
+                </tr>
+                <tr>
+                    <td><button type="button" class="form-control" onclick="display.value += '4'" style="height:40px;width:75px">4</button></td>
+                    <td><button type="button" class="form-control" onclick="display.value += '5'" style="height:40px;width:75px">5</button></td>
+                    <td><button type="button" class="form-control" onclick="display.value += '6'" style="height:40px;width:75px">6</button></td>
+                    <td><button type="button" class="form-control" onclick="display.value += '-'" style="height:40px;width:75px">-</button></td>
+                </tr>
+                <tr>
+                    <td><button type="button" class="form-control" onclick="display.value += '1'" style="height:40px;width:75px">1</button></td>
+                    <td><button type="button" class="form-control" onclick="display.value += '2'" style="height:40px;width:75px">2</button></td>
+                    <td><button type="button" class="form-control" onclick="display.value += '3'" style="height:40px;width:75px">3</button></td>
+                    <td><button type="button" class="form-control btn btn-success" onclick="Validation()" style="height:40px;width:75px">=</button></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="reset" class="form-control btn btn-danger ac-align" value="AC" id="resetButton" style="height:40px;width:150px"></td>
+                    <td colspan="2"><button type="button" class="form-control" id="clearLast" style="height:40px;width:150px!important">CE</button></td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</div>
+<script>
+    $('#clearLast').on('click', function () {
+        //get the input's value
+        var textVal = $('#calcScreen').val();
+        //set the input's value
+        $('#calcScreen').val(textVal.substring(0, textVal.length - 1));
+    });
+    $('#resetButton').on('click', function () {
+        $("#ResultValues").text(0);
+    });
+    function plusminus() {
+        var textVal = $('#calcScreen').val();
+        textVal = textVal * -1;
+        $('#calcScreen').val(textVal);
+    }
+</script>
+<script>
+    function Validation() {
+        var calculatorsVAlues = $("#calcScreen").val()
+        if (calculatorsVAlues != "" && calculatorsVAlues != null && calculatorsVAlues != undefined) {
+            $.ajax({
+                url:"@Url.Action("GetResult", "Calculator")",
+                type: "POST", //send it through get method
+                data: {
+                    str: calculatorsVAlues
+                },
+                success: function (result) {
+                    $("#calcScreen").val(result);
+                    $("#ResultValues").text(result);
+                },
+                error: function (xhr) {
+                    $(".toast-body").text("Please Select Correct Arithmatic Format (Ex: -12+281/2 or +12+2) : start + or - only !")
+                    $('.toast').toast('show')
+                }
+            });
+        }
+        else {
+            $(".toast-body").text("Please Enter the Values")
+            $('.toast').toast('show')
+        }
+}
+</script>

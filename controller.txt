@@ -1,0 +1,102 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+namespace studentprocess.Controllers
+{
+    public class CalculatorController : Controller
+    {
+        [HttpPost]
+        public string GetResult(string str)
+        {
+            List<char> symbleList = new List<char>();
+            int numeric = 0;
+            char[] charSymble = { '+', '-', '*', '/'};
+            string[] st = str.Split(charSymble);
+            if (st[0] == "")
+            {
+                numeric++;
+                if(str[0]=='-')
+                {
+                    st[1] = "-" + st[1];
+                }
+                
+            }
+            for (int i = numeric; i < str.Length-1; i++)
+            {
+                if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/')
+                {
+                    symbleList.Add(str[i]);
+                }
+            }
+
+             double result = Convert.ToDouble(st[numeric]);
+            int b = st.Length;
+            if(numeric==1)
+            {
+                b = b - numeric;
+            }
+
+                for (int i = 1; i <b; i++)
+                {
+                    double num = Convert.ToDouble(st[i]);
+                
+                if(numeric==1)
+                {
+                    if(i==1)
+                    {
+                        num = Convert.ToDouble(st[i + 1]);
+                    }                   
+                }
+                    int j = i - 1;
+                    switch (symbleList[j])
+                    {
+                        case '+':
+                            result =  Addition(result , num);
+                            break;
+                        case '-':
+                            result = Subraction(result, num);
+                        break;
+                        case '*':
+                            result = Multiplay(result, num);
+                        break;
+                        case '/':
+                            result = Division(result, num);
+                        break;
+                        default:
+                            result = 0.0;
+                            break;
+                    }
+                }
+
+                return result.ToString();
+
+        }
+        public double Addition( double number1 , double number2)
+        {
+            double result =number1 +number2;
+         return result;   
+        }
+        public double Subraction(double number1, double number2)
+        {
+            double result = number1 - number2;
+            return result;
+        }
+        public double Multiplay(double number1, double number2)
+        {
+            double result = number1 * number2;
+            return result;
+        }
+        public double Division(double number1, double number2)
+        {
+            double result = number1 / number2;
+            return result;
+        }
+        public ActionResult Calculator()
+        {
+            return View();
+        }
+    }
+}
+
